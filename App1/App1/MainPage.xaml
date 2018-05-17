@@ -3,62 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App1"
              x:Class="App1.MainPage">
-    <StackLayout Orientation="Vertical">
-        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
+
+    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+
+
+        <!--<StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1"/>
+                <Button Text="1" Clicked="ButtonClickced" />
             </StackLayout>
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2"/>
+                <Button Text="2"  Clicked="ButtonClickced"/>
             </StackLayout>
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3"/>
+                <Button Text="3" Clicked="ButtonClickced"/>
             </StackLayout>
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4"/>
-            </StackLayout>
-        </StackLayout>
-        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4"/>
+                <Button Text="4" Clicked="ButtonClickced"/>
             </StackLayout>
         </StackLayout>
         <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1"/>
+                <Button Text="1" Clicked="ButtonClickced"/>
             </StackLayout>
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2"/>
+                <Button Text="2" Clicked="ButtonClickced"/>
             </StackLayout>
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3"/>
+                <Button Text="3" Clicked="ButtonClickced"/>
             </StackLayout>
             <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4"/>
+                <Button Text="4" Clicked="ButtonClickced"/>
             </StackLayout>
         </StackLayout>
         <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4"/>
-            </StackLayout>
+            <Button Text="generateText()" Clicked="ButtonClickced"/>
+            <Button Text="2" Clicked="ButtonClickced"/>
+            <Button Text="3" Clicked="ButtonClickced"/>
+            <Button Text="4" Clicked="ButtonClickced"/>
         </StackLayout>
+        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
+            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
+                <Button Text="1" Clicked="ButtonClickced"/>
+            </StackLayout>
+            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
+                <Button Text="2" Clicked="ButtonClickced"/>
+            </StackLayout>
+            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
+                <Button Text="3" Clicked="ButtonClickced"/>
+            </StackLayout>
+            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
+                <Button Text="4" Clicked="ButtonClickced"/>
+            </StackLayout>
+        </StackLayout>-->
     </StackLayout>
 </ContentPage>
