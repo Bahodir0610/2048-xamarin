@@ -7,36 +7,73 @@ using Xamarin.Forms;
 
 namespace App1
 {
+
     public partial class MainPage : ContentPage
     {
+        public Dictionary<int, string> numberToColor = new Dictionary<int, string>();
+        // 2 #eee4da
+        // 4 #ede0c8
+        // 8 #f2b179
+        // 16 #f59563 
+        // 32 #f67c5f
+        // 64 #f65e3b
+        // 128 #edcf72
+        // 256 #edcc61
+        // 512 #edc850
+        // 1024 #edc53f
+        // 2048 #edc22e                          
+ 
         public int[][] gameBoard = new int[][] {
             new int[] { 0, 0, 0, 0}, 
             new int[] { 0, 0, 0, 0},
             new int[] { 0, 0, 0, 0},
-            new int[] { 0, 0, 0, 0}
+            new int[] { 0, 0, 0, 0 }
+        };
+        public int[][] previousGameBoard = new int[][] {
+            new int[] { 0, 0, 0, 0},
+            new int[] { 0, 0, 0, 0},
+            new int[] { 0, 0, 0, 0},
+            new int[] { 0, 0, 0, 0 }
         };
 
-        public void addNumber ()
+        public void saveBoardState ()
         {
-            List<int[]> emptySpots = new List<int[]>();
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    if (this.gameBoard[i][j] == 0)
-                    {
-                        emptySpots.Add(new int[] { i, j });
-                    }
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    this.previousGameBoard[i][j] = this.gameBoard[i][j];
                 }
             }
-            Random rnd = new Random();
-
-            int r = rnd.Next(emptySpots.Count);
-            var randomSpot = emptySpots[r];
-            this.gameBoard[randomSpot[0]][randomSpot[1]] = 2;
         }
 
-         public int[][] Transpose(/*int[][] matrix*/)
+        public void addNumber (bool forceAdd = false)
         {
+            if (forceAdd || this.shoudlAddNumber())
+            {
+                List<int[]> emptySpots = new List<int[]>();
+                for (int i = 0; i < 4; i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (this.gameBoard[i][j] == 0)
+                        {
+                            emptySpots.Add(new int[] { i, j });
+                        }
+                    }
+                }
+                if (emptySpots.Count > 0)
+                {
+                    Random rnd = new Random();
+                    int r = rnd.Next(emptySpots.Count);
+                    var randomSpot = emptySpots[r];
+                    this.gameBoard[randomSpot[0]][randomSpot[1]] = 2;
+                }
+            }
+        }
 
+        public int[][] Transpose(/*int[][] matrix*/)
+        {
             int w = 4;
             int h = 4;
 
@@ -107,6 +144,7 @@ namespace App1
 
         public void down ()
         {
+            this.saveBoardState();
             this.Transpose();
             for (int i = 0; i < 4; i++)
             {
@@ -119,6 +157,7 @@ namespace App1
 
         public void up()
         {
+            this.saveBoardState();
             this.Transpose();
             for (int i = 0; i < 4; i++)
             {
@@ -130,6 +169,7 @@ namespace App1
 
         public void left()
         {
+            this.saveBoardState();
             for (int i = 0; i < 4; i++)
             {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], false);
@@ -140,11 +180,27 @@ namespace App1
 
         public void right()
         {
+            this.saveBoardState();
             for (int i = 0; i < 4; i++)
             {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], true);
             }
             this.addNumber();
+        }
+
+        public bool shoudlAddNumber()
+        { 
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (this.previousGameBoard[i][j] != this.gameBoard[i][j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public void UpdateBoard()
@@ -172,7 +228,7 @@ namespace App1
                     {
                         Text = this.gameBoard[i][j] == 0 ? "" : this.gameBoard[i][j].ToString(),
                         FontSize = 30,
-                        BackgroundColor = Color.ForestGreen
+                        BackgroundColor = Color.FromHex(this.numberToColor[this.gameBoard[i][j]])
                     };
                     btn.SetValue(Grid.RowProperty, i);
                     btn.SetValue(Grid.ColumnProperty, j);
@@ -236,8 +292,20 @@ namespace App1
         public MainPage()
 		{
 			InitializeComponent();
-            this.addNumber();
-            this.addNumber();
+            this.numberToColor.Add(0, "bbada0");
+            this.numberToColor.Add(2, "eee4da");
+            this.numberToColor.Add(4, "ede0c8");
+            this.numberToColor.Add(8, "f2b179");
+            this.numberToColor.Add(16, "f59563");
+            this.numberToColor.Add(32, "f67c5f");
+            this.numberToColor.Add(64, "f65e3b");
+            this.numberToColor.Add(128, "edcf72");
+            this.numberToColor.Add(256, "edcc61");
+            this.numberToColor.Add(512, "edc850");
+            this.numberToColor.Add(1024, "edc53f");
+            this.numberToColor.Add(2048, "edc22e");
+            this.addNumber(true);
+            this.addNumber(true);
             this.UpdateBoard();
  
         }
