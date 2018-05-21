@@ -9,7 +9,7 @@ namespace App1
 {
     public partial class MainPage : ContentPage
     {
-        int[][] gameBoard = new int[][] {
+        public int[][] gameBoard = new int[][] {
             new int[] { 0, 0, 0, 0}, 
             new int[] { 0, 0, 0, 0},
             new int[] { 0, 0, 0, 0},
@@ -34,8 +34,9 @@ namespace App1
             this.gameBoard[randomSpot[0]][randomSpot[1]] = 2;
         }
 
-         public int[][] Transpose(int[][] matrix)
+         public int[][] Transpose(/*int[][] matrix*/)
         {
+
             int w = 4;
             int h = 4;
 
@@ -49,7 +50,14 @@ namespace App1
             {
                 for (int j = 0; j < h; j++)
                 {
-                    result[j][i] = matrix[i][j];
+                    result[i][j] = this.gameBoard[i][j];
+                }
+            }
+            for (int i = 0; i < w; i++)
+            {
+                for (int j = 0; j < h; j++)
+                {
+                    this.gameBoard[i][j] = result[j][i];
                 }
             }
 
@@ -99,42 +107,43 @@ namespace App1
 
         public void down ()
         {
-            var transposed = this.Transpose(this.gameBoard);
-            transposed[0] = this.sum(transposed[0], true);
-            transposed[1] = this.sum(transposed[1], true);
-            transposed[2] = this.sum(transposed[2], true);
-            transposed[3] = this.sum(transposed[3], true);
-            this.gameBoard = this.Transpose(transposed);
+            this.Transpose();
+            for (int i = 0; i < 4; i++)
+            {
+                this.gameBoard[i] = this.sum(this.gameBoard[i], true);
+            }
+            this.Transpose();
             this.addNumber();
         }
 
 
         public void up()
         {
-            var transposed = this.Transpose(this.gameBoard);
-            transposed[0] = this.sum(transposed[0], false);
-            transposed[1] = this.sum(transposed[1], false);
-            transposed[2] = this.sum(transposed[2], false);
-            transposed[3] = this.sum(transposed[3], false);
-            this.gameBoard = this.Transpose(transposed);
+            this.Transpose();
+            for (int i = 0; i < 4; i++)
+            {
+                this.gameBoard[i] = this.sum(this.gameBoard[i], false);
+            }
+            this.Transpose();
             this.addNumber();
         }
 
         public void left()
         {
-            this.gameBoard[0] = this.sum(this.gameBoard[0], false);
-            this.gameBoard[1] = this.sum(this.gameBoard[1], false);
-            this.gameBoard[2] = this.sum(this.gameBoard[2], false);
-            this.gameBoard[3] = this.sum(this.gameBoard[3], false);
+            for (int i = 0; i < 4; i++)
+            {
+                this.gameBoard[i] = this.sum(this.gameBoard[i], false);
+            }
+            
             this.addNumber();
         }
 
         public void right()
         {
-            this.gameBoard[0] = this.sum(this.gameBoard[0], true);
-            this.gameBoard[1] = this.sum(this.gameBoard[1], true);
-            this.gameBoard[2] = this.sum(this.gameBoard[2], true);
-            this.gameBoard[3] = this.sum(this.gameBoard[3], true);
+            for (int i = 0; i < 4; i++)
+            {
+                this.gameBoard[i] = this.sum(this.gameBoard[i], true);
+            }
             this.addNumber();
         }
 
@@ -142,17 +151,32 @@ namespace App1
         {
             var stacklayout = (StackLayout)(this.Content);
             stacklayout.Children.Clear();
+            var grid = new Grid();
+            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            stacklayout.Children.Add(grid);
             for (int i = 0; i < 4; i++)
             {
-                var row = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.FillAndExpand };
-                stacklayout.Children.Add(row);
+                
+                //var row = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.FillAndExpand };
+                //stacklayout.Children.Add(row);
                 for (int j = 0; j < 4; j++)
                 {
-                    row.Children.Add(new Button
+                    var btn = new Button
                     {
                         Text = this.gameBoard[i][j] == 0 ? "" : this.gameBoard[i][j].ToString(),
-                        WidthRequest = 60,
-                    });
+                        FontSize = 30,
+                        BackgroundColor = Color.ForestGreen
+                    };
+                    btn.SetValue(Grid.RowProperty, i);
+                    btn.SetValue(Grid.ColumnProperty, j);
+                    grid.Children.Add(btn);
                 }
             }
             var controls = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.FillAndExpand };
