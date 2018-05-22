@@ -7,6 +7,7 @@
 #### TODO:
 * add swipe (remove buttons) or add normal buttons
 * detect gameover
-* don't add number when nothing moved
-* add colors
+* don't add number when nothing moved [SOLVED]
+* add colors [SOLVED]
 * add separate class for game logic
+* make it look good on landscape orientation or prevent switching to landscape

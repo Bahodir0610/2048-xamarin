@@ -11,6 +11,7 @@ namespace App1
     public partial class MainPage : ContentPage
     {
         public Dictionary<int, string> numberToColor = new Dictionary<int, string>();
+        public int BOARD_SIZE = 5;
         // 2 #eee4da
         // 4 #ede0c8
         // 8 #f2b179
@@ -23,24 +24,28 @@ namespace App1
         // 1024 #edc53f
         // 2048 #edc22e                          
  
-        public int[][] gameBoard = new int[][] {
-            new int[] { 0, 0, 0, 0}, 
-            new int[] { 0, 0, 0, 0},
-            new int[] { 0, 0, 0, 0},
-            new int[] { 0, 0, 0, 0 }
-        };
-        public int[][] previousGameBoard = new int[][] {
-            new int[] { 0, 0, 0, 0},
-            new int[] { 0, 0, 0, 0},
-            new int[] { 0, 0, 0, 0},
-            new int[] { 0, 0, 0, 0 }
-        };
+        public int[][] generateBoard ()
+        {
+            var newBoard = new int[this.BOARD_SIZE][];
+            for (var i = 0; i < this.BOARD_SIZE; i++)
+            {
+                var row = new int[this.BOARD_SIZE];
+                for (var j = 0; j < this.BOARD_SIZE; j++)
+                {
+                    row[j] = 0;
+                }
+                newBoard[i] = row;
+            }
+            return newBoard;
+        }
+        public int[][] gameBoard;
+        public int[][] previousGameBoard;
 
         public void saveBoardState ()
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     this.previousGameBoard[i][j] = this.gameBoard[i][j];
                 }
@@ -52,9 +57,9 @@ namespace App1
             if (forceAdd || this.shoudlAddNumber())
             {
                 List<int[]> emptySpots = new List<int[]>();
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < this.BOARD_SIZE; i++)
                 {
-                    for (int j = 0; j < 4; j++)
+                    for (int j = 0; j < this.BOARD_SIZE; j++)
                     {
                         if (this.gameBoard[i][j] == 0)
                         {
@@ -74,25 +79,22 @@ namespace App1
 
         public int[][] Transpose(/*int[][] matrix*/)
         {
-            int w = 4;
-            int h = 4;
-
-            int[][] result = new int[h][];
-            result[0] = new int[4];
-            result[1] = new int[4];
-            result[2] = new int[4];
-            result[3] = new int[4];
-
-            for (int i = 0; i < w; i++)
+            int[][] result = new int[this.BOARD_SIZE][];
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
-                for (int j = 0; j < h; j++)
+                result[i] = new int[this.BOARD_SIZE];
+            }
+            
+            for (int i = 0; i < this.BOARD_SIZE; i++)
+            {
+                for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     result[i][j] = this.gameBoard[i][j];
                 }
             }
-            for (int i = 0; i < w; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
-                for (int j = 0; j < h; j++)
+                for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     this.gameBoard[i][j] = result[j][i];
                 }
@@ -146,7 +148,7 @@ namespace App1
         {
             this.saveBoardState();
             this.Transpose();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], true);
             }
@@ -159,7 +161,7 @@ namespace App1
         {
             this.saveBoardState();
             this.Transpose();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], false);
             }
@@ -170,7 +172,7 @@ namespace App1
         public void left()
         {
             this.saveBoardState();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], false);
             }
@@ -181,7 +183,7 @@ namespace App1
         public void right()
         {
             this.saveBoardState();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], true);
             }
@@ -190,9 +192,9 @@ namespace App1
 
         public bool shoudlAddNumber()
         { 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     if (this.previousGameBoard[i][j] != this.gameBoard[i][j])
                     {
@@ -208,21 +210,22 @@ namespace App1
             var stacklayout = (StackLayout)(this.Content);
             stacklayout.Children.Clear();
             var grid = new Grid();
-            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
-            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
-            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
-            grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            for (int i = 0; i < this.BOARD_SIZE; i++)
+            {
+                grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+            }
+
+            for (int i = 0; i < this.BOARD_SIZE; i++)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            }
+
+
             stacklayout.Children.Add(grid);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < this.BOARD_SIZE; i++)
             {
                 
-                //var row = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.FillAndExpand };
-                //stacklayout.Children.Add(row);
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     var btn = new Button
                     {
@@ -292,6 +295,8 @@ namespace App1
         public MainPage()
 		{
 			InitializeComponent();
+            this.gameBoard = this.generateBoard();
+            this.previousGameBoard = this.generateBoard();
             this.numberToColor.Add(0, "bbada0");
             this.numberToColor.Add(2, "eee4da");
             this.numberToColor.Add(4, "ede0c8");
