@@ -13,5 +13,7 @@
 * don't add number when nothing moved [SOLVED]
 * add colors [SOLVED]
 * add separate class for game logic
-* make it look good on landscape orientation or prevent switching to landscape
-* add sometimes 4
+* prevent switching to landscape [SOLVED]
+* add sometimes 4 to gameboard
+* change app icon
+* change app name
