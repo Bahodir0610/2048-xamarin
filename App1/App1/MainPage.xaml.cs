@@ -4,25 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Diagnostics;
 
 namespace App1
 {
-
     public partial class MainPage : ContentPage
     {
         public Dictionary<int, string> numberToColor = new Dictionary<int, string>();
-        public int BOARD_SIZE = 5;
-        // 2 #eee4da
-        // 4 #ede0c8
-        // 8 #f2b179
-        // 16 #f59563 
-        // 32 #f67c5f
-        // 64 #f65e3b
-        // 128 #edcf72
-        // 256 #edcc61
-        // 512 #edc850
-        // 1024 #edc53f
-        // 2048 #edc22e                          
+        public int BOARD_SIZE = 4;                       
  
         public int[][] generateBoard ()
         {
@@ -31,9 +20,8 @@ namespace App1
             {
                 var row = new int[this.BOARD_SIZE];
                 for (var j = 0; j < this.BOARD_SIZE; j++)
-                {
                     row[j] = 0;
-                }
+
                 newBoard[i] = row;
             }
             return newBoard;
@@ -44,36 +32,54 @@ namespace App1
         public void saveBoardState ()
         {
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 for (int j = 0; j < this.BOARD_SIZE; j++)
-                {
                     this.previousGameBoard[i][j] = this.gameBoard[i][j];
-                }
-            }
         }
 
-        public void addNumber (bool forceAdd = false)
+        public bool canAdd()
         {
-            if (forceAdd || this.shoudlAddNumber())
+            for (var i = 0; i < this.BOARD_SIZE; i++)
             {
-                List<int[]> emptySpots = new List<int[]>();
-                for (int i = 0; i < this.BOARD_SIZE; i++)
+                var summed = this.sum(this.gameBoard[i], false); // no matter if true or false
+                for (var j = 0; j < this.BOARD_SIZE; j++)
+                    if (summed[j] != this.gameBoard[i][j]) return true;
+            }
+            return false;
+        }
+
+        async public void addNumber (bool forceAdd = false)
+        {
+            List<int[]> emptySpots = new List<int[]>();
+            for (int i = 0; i < this.BOARD_SIZE; i++)
+                for (int j = 0; j < this.BOARD_SIZE; j++)
+                    if (this.gameBoard[i][j] == 0)
+                        emptySpots.Add(new int[] { i, j });
+            
+            if (emptySpots.Count == 0)
+            {
+                var canAddHorizontally = this.canAdd();
+                this.Transpose();
+                var canAddVertically = this.canAdd();
+                if (!canAddHorizontally && !canAddVertically)
                 {
-                    for (int j = 0; j < this.BOARD_SIZE; j++)
+                    var action = await DisplayAlert("GameOver", "Start a new game?", "Yes", "No");
+                    if (action == true)
                     {
-                        if (this.gameBoard[i][j] == 0)
-                        {
-                            emptySpots.Add(new int[] { i, j });
-                        }
+                        this.gameBoard = this.generateBoard();
+                        this.addNumber(true);
+                        this.addNumber(true);
+                        this.previousGameBoard = this.generateBoard();
                     }
                 }
-                if (emptySpots.Count > 0)
-                {
-                    Random rnd = new Random();
-                    int r = rnd.Next(emptySpots.Count);
-                    var randomSpot = emptySpots[r];
-                    this.gameBoard[randomSpot[0]][randomSpot[1]] = 2;
-                }
+                else
+                    this.Transpose();
+            } else if (forceAdd || this.shoudlAddNumber())
+            {
+                Random rnd = new Random();
+                int r = rnd.Next(emptySpots.Count);
+                var randomSpot = emptySpots[r];
+                this.gameBoard[randomSpot[0]][randomSpot[1]] = 2;
+                this.UpdateBoard();
             }
         }
 
@@ -81,24 +87,15 @@ namespace App1
         {
             int[][] result = new int[this.BOARD_SIZE][];
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 result[i] = new int[this.BOARD_SIZE];
-            }
             
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 for (int j = 0; j < this.BOARD_SIZE; j++)
-                {
                     result[i][j] = this.gameBoard[i][j];
-                }
-            }
+
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 for (int j = 0; j < this.BOARD_SIZE; j++)
-                {
                     this.gameBoard[i][j] = result[j][i];
-                }
-            }
 
             return result;
         }
@@ -133,13 +130,11 @@ namespace App1
             }
             int diff = len - result.Count();
             for (int i = 0; i < diff; i++)
-            {
                 result.Add(0);
-            }
-            if (reverse)
-            {
+
+            if (reverse)            
                 result.Reverse();
-            }
+
             return result.ToArray();
         }
 
@@ -149,9 +144,8 @@ namespace App1
             this.saveBoardState();
             this.Transpose();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], true);
-            }
+
             this.Transpose();
             this.addNumber();
         }
@@ -162,9 +156,8 @@ namespace App1
             this.saveBoardState();
             this.Transpose();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], false);
-            }
+
             this.Transpose();
             this.addNumber();
         }
@@ -173,9 +166,7 @@ namespace App1
         {
             this.saveBoardState();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], false);
-            }
             
             this.addNumber();
         }
@@ -184,24 +175,18 @@ namespace App1
         {
             this.saveBoardState();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 this.gameBoard[i] = this.sum(this.gameBoard[i], true);
-            }
+
             this.addNumber();
         }
 
         public bool shoudlAddNumber()
         { 
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 for (int j = 0; j < this.BOARD_SIZE; j++)
-                {
                     if (this.previousGameBoard[i][j] != this.gameBoard[i][j])
-                    {
                         return true;
-                    }
-                }
-            }
+            
             return false;
         }
 
@@ -211,20 +196,14 @@ namespace App1
             stacklayout.Children.Clear();
             var grid = new Grid();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
-            }
 
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            }
-
 
             stacklayout.Children.Add(grid);
             for (int i = 0; i < this.BOARD_SIZE; i++)
             {
-                
                 for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     var btn = new Button
@@ -244,11 +223,8 @@ namespace App1
                 Text = "Up",
                 WidthRequest = 60
             };
-            up.Clicked += (s, e) =>
-            {
-                this.up();
-                this.UpdateBoard();
-            };
+            up.Clicked += (s, e) => this.up();
+            
             controls.Children.Add(up);
 
    
@@ -257,11 +233,8 @@ namespace App1
                 Text = "Down",
                 WidthRequest = 60
             };
-            down.Clicked += (s, e) =>
-            {
-                this.down();
-                this.UpdateBoard();
-            };
+            down.Clicked += (s, e) => this.down();
+
             controls.Children.Add(down);
 
             var left = new Button
@@ -269,24 +242,16 @@ namespace App1
                 Text = "Left",
                 WidthRequest = 60
             };
-            left.Clicked += (s, e) =>
-            {
-                this.left();
-                this.UpdateBoard();
-            };
+            left.Clicked += (s, e) => this.left();
             controls.Children.Add(left);
-
 
             var right = new Button
             {
                 Text = "Right",
                 WidthRequest = 60
             };
-            right.Clicked += (s, e) =>
-            {
-                this.right();
-                this.UpdateBoard();
-            };
+            right.Clicked += (s, e) => this.right();
+            
             controls.Children.Add(right);
 
             stacklayout.Children.Add(controls);
@@ -312,7 +277,6 @@ namespace App1
             this.addNumber(true);
             this.addNumber(true);
             this.UpdateBoard();
- 
         }
 	}
 }
