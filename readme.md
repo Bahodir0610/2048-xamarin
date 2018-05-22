@@ -1,5 +1,8 @@
 ### Goal of this project is to create simple version of 2048 game
 
+#### how app looks
+![](./screenshot.png)
+
 #### Resourses:
 * [how to generate apk](https://www.youtube.com/watch?v=j5hnbKJelH8&feature=youtu.be)
 * [how to add click handler](https://www.youtube.com/watch?v=gm-RgfdaISU)
