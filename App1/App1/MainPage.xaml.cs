@@ -8,11 +8,33 @@ using System.Diagnostics;
 
 namespace App1
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage, ISwipeCallBack
     {
+        public void onLeftSwipe(View view)
+        {
+            this.left();
+        }
+        public void onRightSwipe(View view)
+        {
+            this.right();
+        }
+        public void onTopSwipe(View view)
+        {
+            this.up();
+        }
+        public void onBottomSwipe(View view)
+        {
+            this.down();
+        }
+        public void onNothingSwiped(View view)
+        {
+
+        }
+
         public Dictionary<int, string> numberToColor = new Dictionary<int, string>();
-        public int BOARD_SIZE = 4;                       
- 
+        public int BOARD_SIZE = 4;
+        public Grid grid;
+   
         public int[][] generateBoard ()
         {
             var newBoard = new int[this.BOARD_SIZE][];
@@ -192,16 +214,7 @@ namespace App1
 
         public void UpdateBoard()
         {
-            var stacklayout = (StackLayout)(this.Content);
-            stacklayout.Children.Clear();
-            var grid = new Grid();
-            for (int i = 0; i < this.BOARD_SIZE; i++)
-                grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
-
-            for (int i = 0; i < this.BOARD_SIZE; i++)
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-            stacklayout.Children.Add(grid);
+            this.grid.Children.Clear();
             for (int i = 0; i < this.BOARD_SIZE; i++)
             {
                 for (int j = 0; j < this.BOARD_SIZE; j++)
@@ -214,9 +227,13 @@ namespace App1
                     };
                     btn.SetValue(Grid.RowProperty, i);
                     btn.SetValue(Grid.ColumnProperty, j);
-                    grid.Children.Add(btn);
+                    this.grid.Children.Add(btn);
                 }
             }
+        }
+
+        public void addControls ()
+        {
             var controls = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.FillAndExpand };
             var up = new Button
             {
@@ -224,10 +241,10 @@ namespace App1
                 WidthRequest = 60
             };
             up.Clicked += (s, e) => this.up();
-            
+
             controls.Children.Add(up);
 
-   
+
             var down = new Button
             {
                 Text = "Down",
@@ -251,15 +268,29 @@ namespace App1
                 WidthRequest = 60
             };
             right.Clicked += (s, e) => this.right();
-            
-            controls.Children.Add(right);
 
-            stacklayout.Children.Add(controls);
+            controls.Children.Add(right);
+            //var stacklayout = (StackLayout)(this.Content);
+            mainLayout.Children.Add(controls);
         }
 
         public MainPage()
 		{
-			InitializeComponent();
+			InitializeComponent();     
+            mainLayout.Children.Clear();
+          
+            var grid = new Grid();
+            for (int i = 0; i < this.BOARD_SIZE; i++)
+                grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+
+            for (int i = 0; i < this.BOARD_SIZE; i++)
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            mainLayout.Children.Add(grid);
+            //this.addControls();
+            SwipeListener swipeListener = new SwipeListener(overlay, this);
+            this.grid = grid;
+
             this.gameBoard = this.generateBoard();
             this.previousGameBoard = this.generateBoard();
             this.numberToColor.Add(0, "bbada0");
@@ -274,6 +305,9 @@ namespace App1
             this.numberToColor.Add(512, "edc850");
             this.numberToColor.Add(1024, "edc53f");
             this.numberToColor.Add(2048, "edc22e");
+            this.addNumber(true);
+            this.addNumber(true);
+            this.addNumber(true);
             this.addNumber(true);
             this.addNumber(true);
             this.UpdateBoard();

@@ -8,7 +8,7 @@
 * [how to add click handler](https://www.youtube.com/watch?v=gm-RgfdaISU)
 
 #### TODO:
-* add swipe (remove buttons) or add normal buttons
+* add swipe (remove buttons) or add normal buttons [SOLVED]
 * detect gameover [SOLVED]
 * don't add number when nothing moved [SOLVED]
 * add colors [SOLVED]

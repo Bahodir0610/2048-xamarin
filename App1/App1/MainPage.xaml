@@ -3,57 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App1"
              x:Class="App1.MainPage">
-
-    <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
-
-
-        <!--<StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1" Clicked="ButtonClickced" />
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2"  Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4" Clicked="ButtonClickced"/>
-            </StackLayout>
+    <AbsoluteLayout>
+        <StackLayout x:Name="mainLayout" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
         </StackLayout>
-        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4" Clicked="ButtonClickced"/>
-            </StackLayout>
-        </StackLayout>
-        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
-            <Button Text="generateText()" Clicked="ButtonClickced"/>
-            <Button Text="2" Clicked="ButtonClickced"/>
-            <Button Text="3" Clicked="ButtonClickced"/>
-            <Button Text="4" Clicked="ButtonClickced"/>
-        </StackLayout>
-        <StackLayout Orientation="Horizontal"  HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="1" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="2" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="3" Clicked="ButtonClickced"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical"  HorizontalOptions="FillAndExpand">
-                <Button Text="4" Clicked="ButtonClickced"/>
-            </StackLayout>
-        </StackLayout>-->
-    </StackLayout>
+        <ContentView x:Name="overlay" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" IsVisible="True" BackgroundColor="Transparent" Padding="0, 0" >
+        </ContentView>
+    </AbsoluteLayout>
+    
+    <!--<StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
+        <ContentView x:Name="actIndBackground"
+         BackgroundColor="AliceBlue" Opacity="0.5"
+         AbsoluteLayout.LayoutFlags="All"
+         AbsoluteLayout.LayoutBounds="0,0,1,1">
+            <Label Text="HI" />
+        </ContentView>
+    </StackLayout>-->
 </ContentPage>
