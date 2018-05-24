@@ -17,3 +17,5 @@
 * add sometimes 4 to gameboard
 * change app icon
 * change app name
+* tile should be square
+* add ability to choose board size 3x3, 4x4
