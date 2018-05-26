@@ -34,7 +34,20 @@ namespace App1
         public Dictionary<int, string> numberToColor = new Dictionary<int, string>();
         public int BOARD_SIZE = 4;
         public Grid grid;
-   
+        private Random rnd = new Random();
+        public double APP_WIDTH = 320;
+        public int gameScore = 0;
+
+        public void startNewGame()
+        {
+            this.gameScore = 0;
+            this.updateGrid();
+            this.gameBoard = this.generateBoard();
+            this.previousGameBoard = this.generateBoard();
+            this.addNumber(true);
+            this.addNumber(true);
+        }
+
         public int[][] generateBoard ()
         {
             var newBoard = new int[this.BOARD_SIZE][];
@@ -86,26 +99,23 @@ namespace App1
                 {
                     var action = await DisplayAlert("GameOver", "Start a new game?", "Yes", "No");
                     if (action == true)
-                    {
-                        this.gameBoard = this.generateBoard();
-                        this.addNumber(true);
-                        this.addNumber(true);
-                        this.previousGameBoard = this.generateBoard();
-                    }
-                }
+                        this.startNewGame();
+                                       }
                 else
                     this.Transpose();
             } else if (forceAdd || this.shoudlAddNumber())
             {
-                Random rnd = new Random();
+                
                 int r = rnd.Next(emptySpots.Count);
                 var randomSpot = emptySpots[r];
-                this.gameBoard[randomSpot[0]][randomSpot[1]] = 2;
+                var randomIntToDeterminateWhichNumberAddToBoard = rnd.Next(0, 10);
+                this.gameBoard[randomSpot[0]][randomSpot[1]] = randomIntToDeterminateWhichNumberAddToBoard < 8 ? 2 : 4;
+                scoreLabel.Text = "Score: " + this.gameScore.ToString();
                 this.UpdateBoard();
             }
         }
 
-        public int[][] Transpose(/*int[][] matrix*/)
+        public int[][] Transpose()
         {
             int[][] result = new int[this.BOARD_SIZE][];
             for (int i = 0; i < this.BOARD_SIZE; i++)
@@ -141,6 +151,7 @@ namespace App1
             {
                 if (i != filterd.Length - 1 && filterd[i] == filterd[i + 1])
                 {
+                    this.gameScore += 2 * filterd[i];
                     result.Add(2 * filterd[i]);
                     i += 2;
                 }
@@ -212,71 +223,43 @@ namespace App1
             return false;
         }
 
+        public int getTileFontSize()
+        {
+            switch(this.BOARD_SIZE)
+            {
+                case 5:
+                    return 25;
+                case 6:
+                    return 18;
+                case 7:
+                    return 20;
+                case 8:
+                    return 15;
+                default:
+                    return 25;
+            }
+        }
+
         public void UpdateBoard()
         {
             this.grid.Children.Clear();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-            {
                 for (int j = 0; j < this.BOARD_SIZE; j++)
                 {
                     var btn = new Button
                     {
                         Text = this.gameBoard[i][j] == 0 ? "" : this.gameBoard[i][j].ToString(),
-                        FontSize = 30,
-                        BackgroundColor = Color.FromHex(this.numberToColor[this.gameBoard[i][j]])
+                        FontSize = getTileFontSize(),
+                        BackgroundColor = Color.FromHex(numberToColor.ContainsKey(this.gameBoard[i][j]) ? numberToColor[this.gameBoard[i][j]] : numberToColor[2048])
                     };
                     btn.SetValue(Grid.RowProperty, i);
                     btn.SetValue(Grid.ColumnProperty, j);
                     this.grid.Children.Add(btn);
                 }
-            }
-        }
-
-        public void addControls ()
-        {
-            var controls = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.FillAndExpand };
-            var up = new Button
-            {
-                Text = "Up",
-                WidthRequest = 60
-            };
-            up.Clicked += (s, e) => this.up();
-
-            controls.Children.Add(up);
-
-
-            var down = new Button
-            {
-                Text = "Down",
-                WidthRequest = 60
-            };
-            down.Clicked += (s, e) => this.down();
-
-            controls.Children.Add(down);
-
-            var left = new Button
-            {
-                Text = "Left",
-                WidthRequest = 60
-            };
-            left.Clicked += (s, e) => this.left();
-            controls.Children.Add(left);
-
-            var right = new Button
-            {
-                Text = "Right",
-                WidthRequest = 60
-            };
-            right.Clicked += (s, e) => this.right();
-
-            controls.Children.Add(right);
-            //var stacklayout = (StackLayout)(this.Content);
-            //mainLayout.Children.Add(controls);
         }
 
         async public void newGameClicked(object sender, EventArgs args)
         {
-            //sender
             var result = await chooseBoardSize();
             var didUserChooseGameSize = false;
             switch (result)
@@ -292,64 +275,54 @@ namespace App1
                 case "5x5":
                     this.BOARD_SIZE = 5;
                     didUserChooseGameSize = true;
-
+                    break;
+                case "6x6":
+                    this.BOARD_SIZE = 6;
+                    didUserChooseGameSize = true;
+                    break;
+                case "7x7":
+                    this.BOARD_SIZE = 7;
+                    didUserChooseGameSize = true;
+                    break;
+                case "8x8":
+                    this.BOARD_SIZE = 8;
+                    didUserChooseGameSize = true;
                     break;
                 default:
                     Console.WriteLine("Default case");
                     break;
             }
             if (didUserChooseGameSize)
-            {
-                this.gameBoard = this.generateBoard();
-                this.previousGameBoard = this.generateBoard();
-                this.addNumber(true);
-                this.addNumber(true);
-                this.UpdateBoard();
-            }
+                this.startNewGame();
         }
-
-        async public void btnClicked(object sender, EventArgs args)
-        {
-            //sender
-            var btn = sender as Button;
-            btn.Text = "fds";
-            await chooseBoardSize();
-
-            mainLayout.Children.Add(new Button { Text = "12" });
-            System.Diagnostics.Debug.WriteLine("btn clicked");
-            
-            //Button(sender).Text = "fsd";
-        }
-
-        void OnContentViewSizeChanged(object sender, EventArgs args)
-        {
-            //ContentView contentView = (ContentView)sender;
-            mainLayout.Children.Add(new Button { Text = "hi" });
-        }
-
+   
         async public Task<string> chooseBoardSize()
         {
-            var choosedBoardSize = await DisplayActionSheet("Choose board size", null, null, "3x3", "4x4", "5x5");
+            var choosedBoardSize = await DisplayActionSheet("Choose board size", null, null, "3x3", "4x4", "5x5", "6x6", "7x7", "8x8");
             return choosedBoardSize;
         }
 
-        public MainPage()
-		{
-			InitializeComponent();
+        public void updateGrid ()
+        {
             mainLayout.Children.Clear();
 
             var grid = new Grid();
             for (int i = 0; i < this.BOARD_SIZE; i++)
-                grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
+                grid.RowDefinitions.Add(new RowDefinition { Height = APP_WIDTH / this.BOARD_SIZE });
 
             for (int i = 0; i < this.BOARD_SIZE; i++)
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
             mainLayout.Children.Add(grid);
-            //this.addControls();
-            SwipeListener swipeListener = new SwipeListener(overlay, this);
             this.grid = grid;
-            
+        }
+
+        public MainPage()
+        {
+            InitializeComponent();
+
+            this.updateGrid();
+            SwipeListener swipeListener = new SwipeListener(overlay, this);
             this.gameBoard = this.generateBoard();
             this.previousGameBoard = this.generateBoard();
             this.numberToColor.Add(0, "bbada0");
@@ -366,7 +339,6 @@ namespace App1
             this.numberToColor.Add(2048, "edc22e");
             this.addNumber(true);
             this.addNumber(true);
-            this.UpdateBoard();
         }
 	}
 }

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App1"
+             x:Name="content_page"
              x:Class="App1.MainPage">
     <StackLayout>
         <Button x:name="new_game" Text="New game" Clicked="newGameClicked" />
@@ -11,14 +12,9 @@
             <ContentView x:Name="overlay" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" IsVisible="True" BackgroundColor="Transparent" Padding="0, 0" >
             </ContentView>
         </AbsoluteLayout>
+        <Frame HorizontalOptions="Center" VerticalOptions="CenterAndExpand" OutlineColor="Accent">
+            <Label x:Name="scoreLabel" Text="Score 54" FontSize="Large" />
+        </Frame>
     </StackLayout>
-    
-    <!--<StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
-        <ContentView x:Name="actIndBackground"
-         BackgroundColor="AliceBlue" Opacity="0.5"
-         AbsoluteLayout.LayoutFlags="All"
-         AbsoluteLayout.LayoutBounds="0,0,1,1">
-            <Label Text="HI" />
-        </ContentView>
-    </StackLayout>-->
+
 </ContentPage>
