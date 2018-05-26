@@ -3,12 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App1"
              x:Class="App1.MainPage">
-    <AbsoluteLayout>
-        <StackLayout x:Name="mainLayout" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-        </StackLayout>
-        <ContentView x:Name="overlay" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" IsVisible="True" BackgroundColor="Transparent" Padding="0, 0" >
-        </ContentView>
-    </AbsoluteLayout>
+    <StackLayout>
+        <Button x:name="new_game" Text="New game" Clicked="newGameClicked" />
+        <AbsoluteLayout>
+            <StackLayout x:Name="mainLayout" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+            </StackLayout>
+            <ContentView x:Name="overlay" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" IsVisible="True" BackgroundColor="Transparent" Padding="0, 0" >
+            </ContentView>
+        </AbsoluteLayout>
+    </StackLayout>
     
     <!--<StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand">
         <ContentView x:Name="actIndBackground"

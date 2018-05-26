@@ -271,14 +271,73 @@ namespace App1
 
             controls.Children.Add(right);
             //var stacklayout = (StackLayout)(this.Content);
-            mainLayout.Children.Add(controls);
+            //mainLayout.Children.Add(controls);
+        }
+
+        async public void newGameClicked(object sender, EventArgs args)
+        {
+            //sender
+            var result = await chooseBoardSize();
+            var didUserChooseGameSize = false;
+            switch (result)
+            {
+                case "3x3":
+                    this.BOARD_SIZE = 3;
+                    didUserChooseGameSize = true;
+                    break;
+                case "4x4":
+                    this.BOARD_SIZE = 4;
+                    didUserChooseGameSize = true;
+                    break;
+                case "5x5":
+                    this.BOARD_SIZE = 5;
+                    didUserChooseGameSize = true;
+
+                    break;
+                default:
+                    Console.WriteLine("Default case");
+                    break;
+            }
+            if (didUserChooseGameSize)
+            {
+                this.gameBoard = this.generateBoard();
+                this.previousGameBoard = this.generateBoard();
+                this.addNumber(true);
+                this.addNumber(true);
+                this.UpdateBoard();
+            }
+        }
+
+        async public void btnClicked(object sender, EventArgs args)
+        {
+            //sender
+            var btn = sender as Button;
+            btn.Text = "fds";
+            await chooseBoardSize();
+
+            mainLayout.Children.Add(new Button { Text = "12" });
+            System.Diagnostics.Debug.WriteLine("btn clicked");
+            
+            //Button(sender).Text = "fsd";
+        }
+
+        void OnContentViewSizeChanged(object sender, EventArgs args)
+        {
+            //ContentView contentView = (ContentView)sender;
+            mainLayout.Children.Add(new Button { Text = "hi" });
+        }
+
+        async public Task<string> chooseBoardSize()
+        {
+            var choosedBoardSize = await DisplayActionSheet("Choose board size", null, null, "3x3", "4x4", "5x5");
+            return choosedBoardSize;
         }
 
         public MainPage()
 		{
-			InitializeComponent();     
+			InitializeComponent();
             mainLayout.Children.Clear();
-          
+
             var grid = new Grid();
             for (int i = 0; i < this.BOARD_SIZE; i++)
                 grid.RowDefinitions.Add(new RowDefinition { Height = 100 });
@@ -290,7 +349,7 @@ namespace App1
             //this.addControls();
             SwipeListener swipeListener = new SwipeListener(overlay, this);
             this.grid = grid;
-
+            
             this.gameBoard = this.generateBoard();
             this.previousGameBoard = this.generateBoard();
             this.numberToColor.Add(0, "bbada0");
@@ -305,9 +364,6 @@ namespace App1
             this.numberToColor.Add(512, "edc850");
             this.numberToColor.Add(1024, "edc53f");
             this.numberToColor.Add(2048, "edc22e");
-            this.addNumber(true);
-            this.addNumber(true);
-            this.addNumber(true);
             this.addNumber(true);
             this.addNumber(true);
             this.UpdateBoard();
